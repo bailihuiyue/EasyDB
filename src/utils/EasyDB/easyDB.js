@@ -96,7 +96,7 @@ class EasyDB {
     }
 
     operateDataBase(type, key, value) {
-        const data = key && value ? { key, value } : key;
+        const data = key && value !== undefined ? { key, value } : key;
         return new Promise((resolve, reject) => {
             const transaction = this.transaction()[type](data);
             this.dbCallback(transaction, (res) => {
