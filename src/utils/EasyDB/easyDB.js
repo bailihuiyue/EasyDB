@@ -42,41 +42,30 @@ class EasyDB {
     async set(key, value) {
         const val = await this.get(key);
         if (!val) {
-            return await this.add({ key, value });
+            return await this.add(key, value);
         } else {
-            return await this.put({ key, value });
+            return await this.put(key, value);
         }
     }
 
-    async get(key) {
-        return new Promise((resolve, reject) => {
-            const transaction = this.transaction().get(key);
-            this.dbCallback(transaction, (data) => {
-                resolve(data);
-            });
-        })
+    get(key) {
+        return this.operateDataBase("get", key);
     }
 
-    put({ key, value }) {
-        return new Promise((resolve, reject) => {
-            const transaction = this.transaction().put({ key, value });
-            this.dbCallback(transaction, (data) => {
-                resolve(data);
-            });
-        })
+    put(key, value) {
+        return this.operateDataBase("put", key, value);
     }
 
     add(key, value) {
-        return new Promise((resolve, reject) => {
-            const transaction = this.transaction().add({ key, value });
-            this.dbCallback(transaction, (data) => {
-                resolve(data);
-            });
-        })
+        return this.operateDataBase("add", key, value);
     }
 
     delete(key) {
-        return this.transaction().delete(key);
+        return this.operateDataBase("delete", key);
+    }
+
+    clear() {
+        return this.operateDataBase("clear");
     }
 
     readAll() {
@@ -95,18 +84,25 @@ class EasyDB {
         })
     }
 
-    dbCallback(transaction, cb) {
+    dbCallback(transaction, cb, type) {
         transaction.onsuccess = (event) => {
-            cb(event.target.result.value || event.target.result);
+            ["clear", "delete"].includes(type) ?
+                cb(true) :
+                cb(event.target.result);
         };
         transaction.onerror = (event) => {
             throw new Error(`${this.dbName} Error:${event.target.error}`);
         }
     }
-    promise(fun) {
+
+    operateDataBase(type, key, value) {
+        const data = key && value ? { key, value } : key;
         return new Promise((resolve, reject) => {
-            fun(resolve, reject);
-        });
+            const transaction = this.transaction()[type](data);
+            this.dbCallback(transaction, (res) => {
+                resolve(res);
+            }, type);
+        })
     }
 }
 
