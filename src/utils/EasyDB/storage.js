@@ -1,24 +1,24 @@
 class storage {
-    get(key) {
+    get = (key) => {
         return localStorage.getItem(key);
     }
 
-    set(key, value) {
+    set = (key, value) => {
         localStorage.setItem(key, value);
         return true;
     }
 
-    delete(key) {
+    delete = (key) => {
         localStorage.removeItem(key);
         return true;
     }
 
-    clear() {
+    clear = () => {
         localStorage.clear();
         return true;
     }
 
-    readAll() {
+    readAll = () => {
         return localStorage;
     }
 }

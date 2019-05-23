@@ -10,7 +10,7 @@ class EasyDB {
         this.inited = this.initDB();
     }
 
-    initDB() {
+    initDB = () => {
         if (!this.inited) {
             let that = this;
             this.DBOpenRequest.onsuccess = (event) => {
@@ -35,11 +35,11 @@ class EasyDB {
         }
     }
 
-    transaction() {
+    transaction = () => {
         return this.db.transaction(this.dbName, "readwrite").objectStore(this.dbName);
     }
 
-    async set(key, value) {
+    set = async (key, value) => {
         const val = await this.get(key);
         if (!val) {
             return await this.add(key, value);
@@ -48,27 +48,27 @@ class EasyDB {
         }
     }
 
-    get(key) {
+    get = (key) => {
         return this.operateDataBase("get", key);
     }
 
-    put(key, value) {
+    put = (key, value) => {
         return this.operateDataBase("put", key, value);
     }
 
-    add(key, value) {
+    add = (key, value) => {
         return this.operateDataBase("add", key, value);
     }
 
-    delete(key) {
+    delete = (key) => {
         return this.operateDataBase("delete", key);
     }
 
-    clear() {
+    clear = () => {
         return this.operateDataBase("clear");
     }
 
-    readAll() {
+    readAll = () => {
         return new Promise((resolve, reject) => {
             const transaction = this.transaction();
             let data = [];
@@ -84,7 +84,7 @@ class EasyDB {
         })
     }
 
-    dbCallback(transaction, cb, type) {
+    dbCallback = (transaction, cb, type) => {
         transaction.onsuccess = (event) => {
             ["clear", "delete"].includes(type) ?
                 cb(true) :
@@ -95,7 +95,7 @@ class EasyDB {
         }
     }
 
-    operateDataBase(type, key, value) {
+    operateDataBase = (type, key, value) => {
         const data = key && value !== undefined ? { key, value } : key;
         return new Promise((resolve, reject) => {
             const transaction = this.transaction()[type](data);
