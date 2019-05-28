@@ -11,3 +11,6 @@
 ##### 使用方法:拷贝项目下的utils/EasyDB文件夹到你的项目中,加载就可以使用了,并且跟框架无关
 
 ##### 运行项目就可以看到expamle,源码在components/Expamle.vue下
+
+##### 兼容性:IE9+,Chrome,FireFox,Safari....
+

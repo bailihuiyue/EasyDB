@@ -108,6 +108,6 @@ class EasyDB {
 
 let DB = null;
 if (!DB) {
-    DB = new EasyDB()
+    DB = window.indexedDB ? new EasyDB() : {}
 }
 export default DB
